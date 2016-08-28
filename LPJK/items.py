@@ -13,18 +13,12 @@ def clean_escape_char(x):
     x = [x.strip("\r\n\t\t\t")]
     return x
 
-def remove_comma(x):
-    x = [x.strip()]
-    return x
-
 class LpjkItem(scrapy.Item):
     num = scrapy.Field()
     npwp = scrapy.Field()
     tgl_permohonan = scrapy.Field()
     tgl_diterima = scrapy.Field()
-    name = scrapy.Field(
-        input_processor= MapCompose(remove_comma)
-    )
+    name = scrapy.Field()
     proses = scrapy.Field()
     status = scrapy.Field(
         input_processor= MapCompose(clean_escape_char),
