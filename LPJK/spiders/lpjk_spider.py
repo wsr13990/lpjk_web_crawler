@@ -2,7 +2,7 @@ import scrapy
 
 from scrapy import FormRequest
 from LPJK.items import LpjkItem
-from LPJK.items import NavigationItem
+from scrapy.shell import inspect_response
 
 class LpjkSpider(scrapy.Spider):
     name = "lpjk"
@@ -12,24 +12,19 @@ class LpjkSpider(scrapy.Spider):
     ]
 
     def parse(self, response):
-        print (response)
         propinsi = response.xpath('//select[@name="propinsi"]//@value').extract()
+        
         for i in propinsi:
-            return FormRequest.from_response(
+            #for p in pages:
+            yield FormRequest.from_response(
                 response,
                 formxpath = '//form[@name="demo1"]',
                 formdata = {
-                    'propinsi':i,
+                    'propinsi': i,
                 },
-                callback = self.parse_table
+                callback = self.parse_page,
+                dont_filter = True
             )
-            #print(scrapy.Request(response, callback=parse_table))
-                
-
-    def parse_link(self, response):
-        for href in response.css("ul.directory.dir-col > li > a::attr('href')"):
-            ulr = response.urljoin(href.extract())
-            yield scrapy.Request(url, callback=self.parse_table)
            
     def parse_table(self, response):
         for sel in response:
@@ -37,3 +32,19 @@ class LpjkSpider(scrapy.Spider):
             item['item'] = sel.xpath('//table[@class="text"]//td/text()').extract()
             print("Inside Parse")
             yield item
+
+    def parse_page(self, response):
+        pages = response.xpath('//select[@name="page"]/@value').extract()
+        for p in pages:
+            yield FormRequest.from_response(
+                response,
+                formxpath = '//form[@action=""status-proses-registrasi-badan-usaha-kbli-lpjk""]',
+                formdata = {
+                    'page': p,
+                },
+                callback = self.parse2,
+                dont_filter = True
+            )
+    
+    def parse2(self,response):
+        inspect_response(response, self)
