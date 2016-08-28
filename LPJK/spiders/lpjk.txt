@@ -1,0 +1,23 @@
+import scrapy
+from scrapy.selector import HtmlXPathSelector
+
+def lpjk(scrapy.Spider):
+	name = "lpjk"
+	allowed_domains = "lpjk.net"
+	start_urls = [
+		"http://www.lpjk.net/"
+	]
+	rules = (
+		Rule(Rule(SgmlLinkExtractor(allow=('/status-proses-registrasi-badan-usaha-kbli-lpjk')), follow=True, callback='parse'),)
+	)
+	
+	def choose_province(self,response):
+		propinsi = response.xpath('//select[contains(@onchange,"showKab()")]//options[@value]/text()').extract()
+		propinsi_value = response.xpath('//select[contains(@onchange,"showKab()")]//options@value').extract()
+		return scrapy.FormRequest.from_response(
+		response,
+		formdata={}
+	)
+
+	def parse(self,response):
+    		
