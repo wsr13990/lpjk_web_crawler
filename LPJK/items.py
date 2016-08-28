@@ -7,9 +7,11 @@
 
 import scrapy
 
-
 class LpjkItem(scrapy.Item):
-    item = scrapy.Field()
-
-class NavigationItem(scrapy.Item):
-    propinsi = scrapy.Field()
+    num = scrapy.Field()
+    npwp = scrapy.Field()
+    tgl_permohonan = scrapy.Field()
+    tgl_diterima = scrapy.Field()
+    name = scrapy.Field()
+    proses = status = scrapy.Field()
+    status = scrapy.Field()

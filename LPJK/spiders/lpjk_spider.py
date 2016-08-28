@@ -38,9 +38,16 @@ class LpjkSpider(scrapy.Spider):
         )
            
     def parse_table(self, response):
-        for sel in response:
-            item = LpjkItem()
-            item['item'] = sel.xpath('//table[@class="text"]//td/text()').extract()
-            print("Inside Parse")
-            yield item
+        item = LpjkItem()
+        item['num'] = response.xpath('//blockquote/table[@class="text"]//tr/td[1]//text()').extract()
+        item['npwp'] = response.xpath('//blockquote/table[@class="text"]//tr/td[2]//text()').extract()
+        item['tgl_permohonan'] = response.xpath('//blockquote/table[@class="text"]//tr/td[3]//text()').extract()
+        item['tgl_diterima'] = response.xpath('//blockquote/table[@class="text"]//tr/td[4]//text()').extract()
+        item['name'] = response.xpath('//blockquote/table[@class="text"]//tr/td[5]//text()').extract()
+        item['proses'] = response.xpath('//blockquote/table[@class="text"]//tr/td[6]//text()').extract()
+        item['status'] = response.xpath('//blockquote/table[@class="text"]//tr/td[7]//text()').extract()
+        yield item
+
+    def parse2(self, response):
+        inspect_response(response, self)
            
